@@ -1,18 +1,18 @@
 sigma = 5;
-b = 2;
+b = 3;
 N = 10000;
-[c,u] = myQuantizer(sigma, b, N);
+[c,u] = myQuantizer(sigma, b, N);% centres and borders
 
 
 function [c,u] = myQuantizer(sigma, b, N)
-    X = normrnd(0,sigma,[1,N]); %N random numbers with normal distribution
+    X = normrnd(0,sigma,[1,N]); % N random numbers with normal distribution
     X = sort(X);
-    u = datasample(X, (2.^b)-1, 'Replace', false); %initialize random borders
+    u = datasample(X, (2.^b)-1, 'Replace', false); % initialize random borders
     u = sort(u);
     u_prev = zeros(size(u));
     [c,u] = update_borders(X, u, b, N);
     iters = 0;
-    while u ~= u_prev % check convergence
+    while  max(abs(u-u_prev))>0.0002 % check convergence
         iters = iters + 1;
         u_prev = u;
         [c,u] = update_borders(X, u, b, N);
